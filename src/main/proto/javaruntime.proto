@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package javeruntime;
+
+option java_multiple_files = true;
+option java_package = "io.grpc.examples.javaruntime";
+option java_outer_classname = "JavaRuntimeProto";
+option objc_class_prefix = "JRP";
+
+service Function {
+  rpc Call (Message) returns (Message) {}
+}
+
+message Message {
+  uint64 ID                   = 1;  // message id
+  map<string,string> Metadata = 2;  // Metadata
+  bytes  Payload              = 3;  // Payload
+}
+

@@ -1,0 +1,88 @@
+plugins {
+    // Provide convenience executables for trying out the examples.
+    id 'application'
+    // ASSUMES GRADLE 2.12 OR HIGHER. Use plugin version 0.7.5 with earlier gradle versions
+    id 'com.google.protobuf' version '0.8.8'
+    // Generate IntelliJ IDEA's .idea & .iml project files
+    id 'idea'
+}
+
+repositories {
+    maven { // The google mirror is less flaky than mavenCentral()
+        url "https://maven-central.storage-download.googleapis.com/maven2/" }
+    mavenCentral()
+    mavenLocal()
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+// IMPORTANT: You probably want the non-SNAPSHOT version of gRPC. Make sure you
+// are looking at a tagged version of the example and not "master"!
+
+// Feel free to delete the comment at the next line. It is just for safely
+// updating the version in our release process.
+def grpcVersion = '1.32.1' // CURRENT_GRPC_VERSION
+def protobufVersion = '3.12.0'
+def protocVersion = protobufVersion
+
+dependencies {
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+    compileOnly "org.apache.tomcat:annotations-api:6.0.53"
+
+    // examples/advanced need this for JsonFormat
+    implementation "com.google.protobuf:protobuf-java-util:${protobufVersion}"
+
+    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
+
+    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.mockito:mockito-core:2.28.2"
+
+    implementation 'io.grpc:grpc-netty:1.33.0'
+    implementation 'org.yaml:snakeyaml:1.27'
+    compile 'com.alibaba:fastjson:1.2.73'
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protocVersion}" }
+    plugins {
+        grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" }
+    }
+    generateProtoTasks {
+        all()*.plugins { grpc {} }
+    }
+}
+
+// Inform IDEs like IntelliJ IDEA, Eclipse or NetBeans about the generated code.
+sourceSets {
+    main {
+        java {
+            srcDirs 'build/generated/source/proto/main/grpc'
+            srcDirs 'build/generated/source/proto/main/java'
+        }
+    }
+}
+
+startScripts.enabled = false
+
+task javeRuntimeServer(type: CreateStartScripts) {
+    mainClassName = 'io.grpc.examples.javaruntime.JavaRuntimeServer'
+    applicationName = 'java-runtime-server'
+    outputDir = new File(project.buildDir, 'tmp')
+    classpath = startScripts.classpath
+}
+
+task javeRuntimeClient(type: CreateStartScripts) {
+    mainClassName = 'io.grpc.examples.javaruntime.JavaRuntimeClient'
+    applicationName = 'java-runtime-client'
+    outputDir = new File(project.buildDir, 'tmp')
+    classpath = startScripts.classpath
+}
+
+applicationDistribution.into('bin') {
+    from(javeRuntimeServer)
+    from(javeRuntimeClient)  
+    fileMode = 0755
+}
