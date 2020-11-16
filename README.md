@@ -1,13 +1,13 @@
 # javaruntime
 
-# Build
+## Build
 
 ./gredlew installDist
 
-# Start server
+## Start server
 
 ./build/install/examples/bin/java-runtime-server
 
-# Start client
+## Start client
 
 ./build/install/examples/bin/java-runtime-client
