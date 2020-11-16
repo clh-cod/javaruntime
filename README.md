@@ -1,13 +1,13 @@
 # javaruntime
 
-构建
+# Build
 
 ./gredlew installDist
 
-启动server
+# Start server
 
 ./build/install/examples/bin/java-runtime-server
 
-启动client
+# Start client
 
 ./build/install/examples/bin/java-runtime-client
