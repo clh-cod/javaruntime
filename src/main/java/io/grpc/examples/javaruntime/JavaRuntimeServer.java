@@ -37,7 +37,7 @@ public class JavaRuntimeServer {
         config.put("name","baetyl-java");
         config.put("confPath","/etc/baetyl/service.yml");
         config.put("codePath","/var/lib/baetyl/code");
-        config.put("serverAddress","0.0.0.0:50051");
+        config.put("serverAddress","0.0.0.0:80");
     }
 
     public void Init() {
