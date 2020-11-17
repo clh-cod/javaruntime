@@ -68,7 +68,7 @@ public class JavaRuntimeClient {
         String jsonString = JSON.toJSONString(json);
         ByteString Dir = ByteString.copyFromUtf8(jsonString);
 
-        String target = "localhost:50051";
+        String target = "localhost:80";
         Map<String, String> systemEnv = System.getenv();
         if(systemEnv.containsKey("BAETYL_SERVICE_ADDRESS")) {
             target = systemEnv.get("BAETYL_SERVICE_ADDRESS");
